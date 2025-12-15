@@ -102,19 +102,22 @@ bool	resize_all_windows(t_data *data)
 	
 	resize_grid(data);
 
+	wclear(data->title);
 	wresize(data->title, 5, data->full_w - 1);
 	mvwin(data->title, 0, 0);
-	werase(data->title);
+	// werase(data->title);
 	box(data->title, 0, 0);
 
+	wclear(data->score);
 	wresize(data->score, data->grid_win_h, data->full_w - (data->grid_pos_x + data->grid_win_w) - 1);
 	mvwin(data->score, 5, (data->grid_pos_x + data->grid_win_w));
-	werase(data->score);
+	// werase(data->score);
 	box(data->score, 0, 0);
 
+	wclear(data->instruction);
 	wresize(data->instruction, data->grid_size * SQUARE_H, data->grid_pos_x);
 	mvwin(data->instruction, 5, 0);
-	werase(data->instruction);
+	// werase(data->instruction);
 	box(data->instruction, 0, 0);
 
 	return (true);
@@ -143,6 +146,8 @@ int	main(void)
 
 	mvprintw(0, 0, "Premi INVIO per iniziare\n");
 	c = getch();
+	clear();
+	refresh();
 
 	data.full_h = LINES;
 	data.full_w = COLS;
@@ -184,3 +189,5 @@ int	main(void)
 	
 	endwin();
 }
+
+// https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/index.html
