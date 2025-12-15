@@ -6,7 +6,7 @@
 /*   By: miricci <miricci@student.42firenze.it>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 10:40:45 by miricci           #+#    #+#             */
-/*   Updated: 2025/12/15 19:30:25 by miricci          ###   ########.fr       */
+/*   Updated: 2025/12/15 22:46:04 by miricci          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,9 @@ int	main(void)
 		{
 			for (int j = 0; j < data.grid_size; j++)
 			{
+				data.grid[i][j].flag = false;
+				werase(data.grid[i][j].win);
+				box(data.grid[i][j].win, 0, 0);
 				if (data.grid[i][j].value)
 					mvwprintw(data.grid[i][j].win, 2, 2, "%d", data.grid[i][j].value);
 				wnoutrefresh(data.grid[i][j].win);
@@ -87,17 +90,25 @@ int	main(void)
 		if (c == 27)
 			break ;
 		else if (c == KEY_UP)
+		{
+			swipe_up(&data);
 			new_tile(&data);
+		}
 		else if (c == KEY_DOWN)
+		{
+			swipe_down(&data);
 			new_tile(&data);
+		}
 		else if (c == KEY_LEFT)
 		{
-			sum_left(&data);
 			swipe_left(&data);
 			new_tile(&data);
 		}
 		else if (c == KEY_RIGHT)
+		{
+			swipe_right(&data);
 			new_tile(&data);
+		}
 		else
 			continue ;
 	}

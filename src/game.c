@@ -6,11 +6,16 @@
 /*   By: miricci <miricci@student.42firenze.it>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 15:51:01 by miricci           #+#    #+#             */
-/*   Updated: 2025/12/15 19:20:52 by miricci          ###   ########.fr       */
+/*   Updated: 2025/12/15 22:55:00 by miricci          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wong_kar_wai.h"
+
+// void	you_lose()
+// {
+	
+// }
 
 void	new_tile(t_data *data)
 {
@@ -27,11 +32,9 @@ void	new_tile(t_data *data)
 				non_active_tile++;
 		}
 	}
-	ft_putstr_fd("\nnon_active_tile: ", 2);
-	ft_putnbr_fd(non_active_tile, 2);
+	// if (non_active_tile == 0)
+	// 	you_lose();
 	rand_tile = rand() % non_active_tile;
-	ft_putstr_fd("\nrand_tile: ", 2);
-	ft_putnbr_fd(rand_tile, 2);
 	while (counter <= rand_tile)
 	{
 		if (j >= data->grid_size)
@@ -45,45 +48,12 @@ void	new_tile(t_data *data)
 			counter++;
 	}
 	rand_value = rand() % 2;
-	ft_putstr_fd("\nrow i: ", 2);
-	ft_putnbr_fd(i, 2);
-	ft_putstr_fd("\ncol j: ", 2);
-	ft_putnbr_fd(j, 2);
-	ft_putstr_fd("\nrand_value: ", 2);
-	ft_putnbr_fd(rand_value, 2);
 	if (rand_value == 0)
 		data->grid[i][j].value = 2;
 	else if (rand_value == 1)
 		data->grid[i][j].value = 4;
 }
 
-/*
-** Somma le celle adiacenti con lo stesso valore spostandosi verso sinistra.
-** Itera ogni riga saltando una cella alla volta (j += 2) per evitare
-** di sommare la stessa cella due volte. Se la cella a sinistra è vuota
-** o ha lo stesso valore, somma i valori e azzera la cella corrente.
-*/
-void	sum_left(t_data *data)
-{
-	for (int i = 0; i < data->grid_size; i++) {
-		for (int j = 1; j < data->grid_size; j += 2) {
-			if (data->grid[i][j].value == data->grid[i][j - 1].value)
-			{
-				data->grid[i][j - 1].value += data->grid[i][j].value;
-				data->grid[i][j].value = 0;
-			}
-		}
-	}
-	// for (int i = 0; i < data->grid_size; i++)
-	// {
-	// 	for (int j = 0; j < data->grid_size; j++)
-	// 	{
-	// 		if (data->grid[i][j].value)
-	// 			mvwprintw(data->grid[i][j].win, 2, 2, "%d", data->grid[i][j].value);
-	// 		wnoutrefresh(data->grid[i][j].win);
-	// 	}
-	// }
-}
 
 /*
 ** Sposta tutte le celle verso sinistra, riempiendo gli spazi vuoti.
@@ -93,18 +63,91 @@ void	sum_left(t_data *data)
 void	swipe_left(t_data *data)
 {
 	int	k;
-	int	temp;
+	// int	temp;
 	
 	for (int i = 0; i < data->grid_size; i++) {
 		for (int j = 1; j < data->grid_size; j++) {
 			k = j;
+			if (data->grid[i][k].value == 0)
+				continue ;
+			// temp = data->grid[i][j].value;
+			while (k > 0 && (data->grid[i][k - 1].value == 0 || data->grid[i][k].value == data->grid[i][k - 1].value))
+			{
+				if (data->grid[i][k].flag == true)
+					break ;
+				if (data->grid[i][k - 1].value != 0)
+					data->grid[i][k - 1].flag = true;
+				data->grid[i][k - 1].value += data->grid[i][k].value;
+				data->grid[i][k].value = 0;
+				k--;
+			}
+		}
+	}
+}
+
+void	swipe_right(t_data *data)
+{
+	int	k;
+	
+	for (int i = 0; i < data->grid_size; i++) {
+		for (int j = data->grid_size - 2; j >= 0; j--) {
+			k = j;
 			if (data->grid[i][j].value == 0)
 				continue ;
-			temp = data->grid[i][j].value;
-			while (k > 0 && data->grid[i][k - 1].value == 0)
+			while (k < data->grid_size - 1 && (data->grid[i][k + 1].value == 0 || data->grid[i][k].value == data->grid[i][k + 1].value))
 			{
-				data->grid[i][k - 1].value = data->grid[i][j].value;
+				if (data->grid[i][k].flag == true)
+					break ;
+				if (data->grid[i][k + 1].value != 0)
+					data->grid[i][k + 1].flag = true;
+				data->grid[i][k + 1].value += data->grid[i][k].value;
 				data->grid[i][k].value = 0;
+				k++;
+			}
+		}
+	}
+}
+
+void	swipe_down(t_data *data)
+{
+	int	k;
+	
+	for (int j = 0; j < data->grid_size; j++) {
+		for (int i = data->grid_size - 2; i >= 0; i--) {
+			k = i;
+			if (data->grid[k][j].value == 0)
+				continue ;
+			while (k < data->grid_size - 1 && (data->grid[k + 1][j].value == 0 || data->grid[k][j].value == data->grid[k + 1][j].value))
+			{
+				if (data->grid[k][j].flag == true)
+					break ;
+				if (data->grid[k + 1][j].value != 0)
+					data->grid[k + 1][j].flag = true;
+				data->grid[k + 1][j].value += data->grid[k][j].value;
+				data->grid[k][j].value = 0;
+				k++;
+			}
+		}
+	}
+}
+
+void	swipe_up(t_data *data)
+{
+	int	k;
+	
+	for (int j = 0; j < data->grid_size; j++) {
+		for (int i = 1; i < data->grid_size; i++) {
+			k = i;
+			if (data->grid[k][j].value == 0)
+				continue ;
+			while (k > 0 && (data->grid[k - 1][j].value == 0 || data->grid[k][j].value == data->grid[k - 1][j].value))
+			{
+				if (data->grid[k][j].flag == true)
+					break ;
+				if (data->grid[k - 1][j].value != 0)
+					data->grid[k - 1][j].flag = true;
+				data->grid[k - 1][j].value += data->grid[k][j].value;
+				data->grid[k][j].value = 0;
 				k--;
 			}
 		}
