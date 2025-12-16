@@ -6,7 +6,7 @@
 /*   By: miricci <miricci@student.42firenze.it>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 10:39:07 by miricci           #+#    #+#             */
-/*   Updated: 2025/12/15 22:48:16 by miricci          ###   ########.fr       */
+/*   Updated: 2025/12/16 12:59:23 by miricci          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ void	swipe_left(t_data *data);
 void	swipe_right(t_data *data);
 void	swipe_down(t_data *data);
 void	swipe_up(t_data *data);
+void	handle_input(t_data data, char c);
 
 #endif

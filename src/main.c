@@ -6,7 +6,7 @@
 /*   By: miricci <miricci@student.42firenze.it>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 10:40:45 by miricci           #+#    #+#             */
-/*   Updated: 2025/12/15 22:46:04 by miricci          ###   ########.fr       */
+/*   Updated: 2025/12/16 12:57:58 by miricci          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,31 @@ void	exit_game(void)
 	ft_malloc(0, true);
 }
 
+void	handle_input(t_data data, char c)
+{
+	if (c == 27)
+		return ;
+	else if (c == KEY_UP)
+	{
+		swipe_up(&data);
+		new_tile(&data);
+	}
+	else if (c == KEY_DOWN)
+	{
+		swipe_down(&data);
+		new_tile(&data);
+	}
+	else if (c == KEY_LEFT)
+	{
+		swipe_left(&data);
+		new_tile(&data);
+	}
+	else if (c == KEY_RIGHT)
+	{
+		swipe_right(&data);
+		new_tile(&data);
+	}
+}
 bool	init_game_windows(t_data *data)
 {	
 	int curr_x = GAME_X;
@@ -87,30 +112,7 @@ int	main(void)
 		}
 		doupdate();
 		c = getch();
-		if (c == 27)
-			break ;
-		else if (c == KEY_UP)
-		{
-			swipe_up(&data);
-			new_tile(&data);
-		}
-		else if (c == KEY_DOWN)
-		{
-			swipe_down(&data);
-			new_tile(&data);
-		}
-		else if (c == KEY_LEFT)
-		{
-			swipe_left(&data);
-			new_tile(&data);
-		}
-		else if (c == KEY_RIGHT)
-		{
-			swipe_right(&data);
-			new_tile(&data);
-		}
-		else
-			continue ;
+		handle_input(data, c);
 	}
 	endwin();
 }
