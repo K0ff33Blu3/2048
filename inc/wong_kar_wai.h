@@ -6,7 +6,7 @@
 /*   By: miricci <miricci@student.42firenze.it>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 10:39:07 by miricci           #+#    #+#             */
-/*   Updated: 2025/12/15 14:52:33 by miricci          ###   ########.fr       */
+/*   Updated: 2025/12/15 22:48:16 by miricci          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 typedef struct s_tile
 {
 	int		value;
+	bool	flag;
 	WINDOW	*win;
 }			t_tile;
 
@@ -42,5 +43,10 @@ typedef struct s_data
 bool	init_game_windows(t_data *data);
 void	cleaning(t_list **lis);
 void	*ft_malloc(size_t size, bool CLEAN);
+void	new_tile(t_data *data);
+void	swipe_left(t_data *data);
+void	swipe_right(t_data *data);
+void	swipe_down(t_data *data);
+void	swipe_up(t_data *data);
 
 #endif
