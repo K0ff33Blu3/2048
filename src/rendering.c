@@ -119,7 +119,7 @@ void	render(t_data *data)
 				render_tile(&data->grid[i][j]);
 		}
 	
-		if (data->lost || data->won)
+		if (data->lost || (data->won && !data->already_won))
 			render_end_screen(data);
 	}
 

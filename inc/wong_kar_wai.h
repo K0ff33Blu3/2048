@@ -41,7 +41,7 @@
 
 enum e_const
 {
-	WIN_VALUE = 2048
+	WIN_VALUE = 4
 };
 
 typedef struct s_tile
@@ -59,6 +59,7 @@ typedef struct s_data
 	bool	moved;
 	bool	lost;
 	bool	won;
+	bool	already_won;
 	bool	in_menu;
 	bool	end;
 
@@ -99,19 +100,27 @@ void	render(t_data *data);
 // utils.c
 void	exit_game(t_data *data);
 void	my_box(WINDOW *win, int color);
+void	free_data(t_data *data);
 
-// alloc_handler.c
-void	cleaning(t_list **lis);
-void	*ft_malloc(size_t size, bool CLEAN);
+// input_handler.c
+void	handle_menu_keys(t_data *data, int c);
+void	handle_win_loss_keys(t_data *data, int c);
+void	handle_input(t_data *data, int c);
+
+// game.c
 bool	new_tile(t_data *data);
 void	swipe_left(t_data *data);
 void	swipe_right(t_data *data);
 void	swipe_down(t_data *data);
 void	swipe_up(t_data *data);
-void	handle_input(t_data *data, int c);
-void	print_map(t_data data, int fd);
 void	check_and_swap(t_tile *curr, t_tile *new, t_data *data);
 void	restart_game(t_data *data);
+
+
+// alloc_handler.c
+void	cleaning(t_list **lis);
+void	*ft_malloc(size_t size, bool CLEAN);
+void	print_map(t_data data, int fd);
 
 // valgrind --suppressions=ncurses.supp --leak-check=full --log-file=valgrind.log ./2048
 

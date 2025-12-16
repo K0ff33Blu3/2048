@@ -26,11 +26,6 @@ void	restart_game(t_data *data)
 	clear();
 }
 
-void	you_lost(t_data *data)
-{
-	data->lost = true;
-}
-
 bool	new_tile(t_data *data)
 {
 	int	non_active_tile;
@@ -80,12 +75,26 @@ bool	new_tile(t_data *data)
 	return (true);
 }
 
+void	check_and_swap(t_tile *curr, t_tile *new, t_data *data)
+{
+	if (new->value != 0)
+		new->flag = true;
+	new->value += curr->value;
+	if (new->value == WIN_VALUE && !data->already_won)
+		data->won = true;
+	if (new->value > ft_atoi(data->best_score))
+	{
+		free(data->best_score);
+		data->best_score = ft_itoa(new->value);
+		close(data->score_fd);
+		data->score_fd = open(".score", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (data->score_fd > 0)
+			write(data->score_fd, data->best_score, ft_strlen(data->best_score));
+	}
+	curr->value = 0;
+	data->moved = true;
+}
 
-/*
-** Sposta tutte le celle verso sinistra, riempiendo gli spazi vuoti.
-** Per ogni cella non vuota, la sposta verso sinistra finché non trova
-** una cella occupata o raggiunge il bordo sinistro della griglia.
-*/
 void	swipe_left(t_data *data)
 {
 	int	k = 0;
@@ -149,25 +158,6 @@ void	swipe_down(t_data *data)
 	}
 }
 
-void	check_and_swap(t_tile *curr, t_tile *new, t_data *data)
-{
-	if (new->value != 0)
-		new->flag = true;
-	new->value += curr->value;
-	if (new->value == WIN_VALUE)
-		data->won = true;
-	if (new->value > ft_atoi(data->best_score))
-	{
-		free(data->best_score);
-		data->best_score = ft_itoa(new->value);
-		close(data->score_fd);
-		data->score_fd = open(".score", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (data->score_fd > 0)
-			write(data->score_fd, data->best_score, ft_strlen(data->best_score));
-	}
-	curr->value = 0;
-	data->moved = true;
-}
 
 void	swipe_up(t_data *data)
 {
