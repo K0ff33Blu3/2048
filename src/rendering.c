@@ -48,19 +48,80 @@ static void render_window(WINDOW *win, int txt_y, int txt_x, const char *txt, in
     wnoutrefresh(win);
 }
 
+static void	render_end_screen(t_data *data)
+{
+	werase(data->end_screen);
+	if (data->lost)
+	{
+		mvwaddstr(data->end_screen, 3,(((data->full_w / 2) - ft_strlen("YOU LOST")) / 2), "YOU LOST");
+		mvwaddstr(data->end_screen, 6,(((data->full_w / 2)  - ft_strlen("Press ESC to close game")) / 2), "Press ESC to close game");
+		mvwaddstr(data->end_screen, 7,(((data->full_w / 2)  - ft_strlen("Press r to play again")) / 2), "Press r to play again");
+	}
+	else
+	{
+		mvwaddstr(data->end_screen, 3,(((data->full_w / 2) - ft_strlen("YOU WON")) / 2), "YOU WON");
+		mvwaddstr(data->end_screen, 6,(((data->full_w / 2)  - ft_strlen("Press ESC to close game")) / 2), "Press ESC to close game");
+		mvwaddstr(data->end_screen, 7,(((data->full_w / 2)  - ft_strlen("Press c to continue playing")) / 2), "Press c to continue playing");
+	}
+	box(data->end_screen, 0, 0);
+	wnoutrefresh(data->end_screen);
+}
+
+static	void render_instruction(t_data *data)
+{
+	WINDOW *win = data->instruction;
+
+	werase(win);
+
+    mvwaddstr(win, 2, 2, "INSTRUCTIONS");
+    mvwaddstr(win, 5, 2, "UP, DOWN, LEFT and RIGHT arrows");
+    mvwaddstr(win, 6, 2, "to move and merge");
+    mvwaddstr(win, 8, 2, "ESC to close game");
+
+    my_box(win, BLACK);
+    wnoutrefresh(win);
+}
+
+static void	render_score(t_data *data)
+{
+	werase(data->score);
+    mvwaddstr(data->score, 2, 2, "BEST SCORE");
+	mvwaddstr(data->score, 4, 2, data->best_score);
+
+	my_box(data->score, BLACK);
+	wnoutrefresh(data->score);
+}
+
+static void render_menu(t_data *data)
+{
+	werase(data->menu);
+	mvwaddstr(data->menu, 3, (data->full_w - ft_strlen("MENU")) / 2, "MENU");
+	mvwaddstr(data->menu, data->full_h / 2, (data->full_w - ft_strlen("Press 4 to play 4x4         Press 5 to play 5x5")) / 2, "Press 4 to play 4x4         Press 5 to play 5x5");
+	box(data->menu, 0, 0);
+	wnoutrefresh(data->menu);
+}
+
 void	render(t_data *data)
 {
-	clear();
 	refresh();
 
-	render_window(data->title, 2, ((data->full_w - ft_strlen(TITLE)) / 2), TITLE, BLACK);
-	render_window(data->instruction, 2, 2, "LALALALA", BLACK);
-	render_window(data->score, 2, 2,  "YOUR SCORE", BLACK);
-
-	for (int i = 0; i < data->grid_size; i++)
+	if (data->in_menu)
+		render_menu(data);
+	else
 	{
-		for (int j = 0; j < data->grid_size; j++)
-			render_tile(&data->grid[i][j]);
+		render_window(data->title, 2, ((data->full_w - ft_strlen(TITLE)) / 2), TITLE, BLACK);
+		render_instruction(data);
+		render_score(data);
+		
+		for (int i = 0; i < data->grid_size; i++)
+		{
+			for (int j = 0; j < data->grid_size; j++)
+				render_tile(&data->grid[i][j]);
+		}
+	
+		if (data->lost || data->won)
+			render_end_screen(data);
 	}
+
 	doupdate();
 }

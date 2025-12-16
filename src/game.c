@@ -19,25 +19,16 @@ void	restart_game(t_data *data)
 		for (int j = 0; j < data->grid_size; j++)
 			data->grid[i][j].value = 0;
 	}
+	data->moved = true;
+	data->lost = false;
 	new_tile(data);
 	new_tile(data);
+	clear();
 }
 
-void	you_lost(t_data data)
+void	you_lost(t_data *data)
 {
-	WINDOW *lose_win;
-	int	c;
-
-	lose_win = newwin(data.full_h / 2, data.full_w / 2, (data.full_h - (data.full_h / 2)) / 2, (data.full_w - (data.full_w / 2)) / 2);
-	waddstr(lose_win, "YOU LOST\n");
-	waddstr(lose_win, "Press ESC to close game\n");
-	waddstr(lose_win, "Press anything to play again\n");	
-	c = wgetch(lose_win);
-	delwin(lose_win);
-	if (c == KEY_EXIT)
-		return (exit_game());
-	else
-		return (restart_game(&data));
+	data->lost = true;
 }
 
 bool	new_tile(t_data *data)
@@ -48,30 +39,36 @@ bool	new_tile(t_data *data)
 	int	i = 0;
 	int	j = 0;
 
-	if (!data->moved)
-		return (true);
 	
 	non_active_tile = 0;
 	for (int i = 0; i < data->grid_size; i++) {
 		for (int j = 0; j < data->grid_size; j++) {
 			if (!data->grid[i][j].value)
-				non_active_tile++;
+			non_active_tile++;
 		}
 	}
 	if (non_active_tile == 0)
-		return (you_lost(*data), false);
-	rand_tile = rand() % non_active_tile;
-	while (counter <= rand_tile)
 	{
-		if (j >= data->grid_size)
-		{
-			j = 0;
-			i++;
-		}
-		else
-			j++;
-		if (data->grid[i][j].value == 0)
-			counter++;
+		data->lost = true;
+		return (false);
+	}
+	if (!data->moved)
+		return (true);
+	rand_tile = rand() % non_active_tile;
+	while (i < data->grid_size)
+	{
+	    if (data->grid[i][j].value == 0)
+	    {
+	        if (counter == rand_tile)
+	            break;
+	        counter++;
+	    }
+	    j++;
+	    if (j == data->grid_size)
+	    {
+	        j = 0;
+	        i++;
+	    }
 	}
 	rand_value = rand() % 3;
 	if (rand_value == 0)
@@ -91,7 +88,7 @@ bool	new_tile(t_data *data)
 */
 void	swipe_left(t_data *data)
 {
-	int	k;
+	int	k = 0;
 	
 	data->moved = false;
 	for (int i = 0; i < data->grid_size; i++) {
@@ -112,7 +109,7 @@ void	swipe_left(t_data *data)
 
 void	swipe_right(t_data *data)
 {
-	int	k;
+	int	k = 0;
 	
 	data->moved = false;
 	for (int i = 0; i < data->grid_size; i++) {
@@ -133,7 +130,7 @@ void	swipe_right(t_data *data)
 
 void	swipe_down(t_data *data)
 {
-	int	k;
+	int	k = 0;
 	
 	data->moved = false;
 	for (int j = 0; j < data->grid_size; j++) {
@@ -157,13 +154,24 @@ void	check_and_swap(t_tile *curr, t_tile *new, t_data *data)
 	if (new->value != 0)
 		new->flag = true;
 	new->value += curr->value;
+	if (new->value == WIN_VALUE)
+		data->won = true;
+	if (new->value > ft_atoi(data->best_score))
+	{
+		free(data->best_score);
+		data->best_score = ft_itoa(new->value);
+		close(data->score_fd);
+		data->score_fd = open(".score", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (data->score_fd > 0)
+			write(data->score_fd, data->best_score, ft_strlen(data->best_score));
+	}
 	curr->value = 0;
 	data->moved = true;
 }
 
 void	swipe_up(t_data *data)
 {
-	int	k;
+	int	k = 0;
 	
 	data->moved = false;
 	for (int j = 0; j < data->grid_size; j++) {

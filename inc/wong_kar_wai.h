@@ -22,10 +22,10 @@
 
 #define GAME_X 8
 #define GAME_Y 5
-#define SQUARE_W 9
-#define SQUARE_H 5
+#define SQUARE_W 11
+#define SQUARE_H 7
 
-#define TITLE "2048 in the 2025"
+#define TITLE "2048 in 2025"
 #define GOTTO 1
 #define EUH 2
 #define BOH 3
@@ -39,6 +39,11 @@
 #define THRTWO 8
 #define SIXFOUR 9
 
+enum e_const
+{
+	WIN_VALUE = 2048
+};
+
 typedef struct s_tile
 {
 	int		value;
@@ -48,8 +53,14 @@ typedef struct s_tile
 
 typedef struct s_data
 {
+	char	*best_score;
+	int		score_fd;
 	int		log;
-	bool		moved;
+	bool	moved;
+	bool	lost;
+	bool	won;
+	bool	in_menu;
+	bool	end;
 
 	int		full_w;
 	int		full_h;
@@ -64,6 +75,9 @@ typedef struct s_data
 	WINDOW	*title;
 	WINDOW	*score;
 	WINDOW	*instruction;
+	WINDOW	*end_screen;
+	WINDOW	*menu;
+
 } 			t_data;
 
 
@@ -72,6 +86,7 @@ typedef struct s_data
 bool	init_data(t_data *data);
 bool	init_all_windows(t_data *data);
 void	init_my_colors();
+bool 	init_in_game_windows(t_data *data);
 bool	init_game_windows(t_data *data);
 
 // resize.c
@@ -82,7 +97,7 @@ bool	resize_all_windows(t_data *data);
 void	render(t_data *data);
 
 // utils.c
-void	exit_game(void);
+void	exit_game(t_data *data);
 void	my_box(WINDOW *win, int color);
 
 // alloc_handler.c
@@ -96,5 +111,8 @@ void	swipe_up(t_data *data);
 void	handle_input(t_data *data, int c);
 void	print_map(t_data data, int fd);
 void	check_and_swap(t_tile *curr, t_tile *new, t_data *data);
+void	restart_game(t_data *data);
+
+// valgrind --suppressions=ncurses.supp --leak-check=full --log-file=valgrind.log ./2048
 
 #endif

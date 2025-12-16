@@ -1,9 +1,8 @@
 #include "wong_kar_wai.h"
 
-void	exit_game(void)
+void	exit_game(t_data *data)
 {
-	ft_malloc(0, true);
-	exit(1);
+	data->end = true;
 }
 
 void	my_box(WINDOW *win, int color)

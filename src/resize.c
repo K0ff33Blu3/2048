@@ -42,5 +42,11 @@ bool	resize_all_windows(t_data *data)
 	wresize(data->instruction, data->grid_size * SQUARE_H, data->grid_pos_x);
 	mvwin(data->instruction, 5, 0);
 
+	wclear(data->end_screen);
+	wresize(data->end_screen, data->full_h / 2, data->full_w / 2);
+	mvwin(data->end_screen, (data->full_h - (data->full_h / 2)) / 2, (data->full_w - (data->full_w / 2)) / 2);
+
+	clear();
+
 	return (true);
 }

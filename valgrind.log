@@ -1,50 +1,20 @@
-==82674== Memcheck, a memory error detector
-==82674== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==82674== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==82674== Command: ./2048
-==82674== Parent PID: 71390
-==82674== 
-==82674== Use of uninitialised value of size 8
-==82674==    at 0x401481: new_tile (game.c:31)
-==82674==    by 0x401FCB: init_game_windows (inits.c:16)
-==82674==    by 0x40220B: init_all_windows (inits.c:58)
-==82674==    by 0x402419: init_data (inits.c:89)
-==82674==    by 0x402547: main (main.c:48)
-==82674== 
-==82674== Invalid read of size 4
-==82674==    at 0x401481: new_tile (game.c:31)
-==82674==    by 0x401FCB: init_game_windows (inits.c:16)
-==82674==    by 0x40220B: init_all_windows (inits.c:58)
-==82674==    by 0x402419: init_data (inits.c:89)
-==82674==    by 0x402547: main (main.c:48)
-==82674==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==82674== 
-==82674== 
-==82674== Process terminating with default action of signal 11 (SIGSEGV)
-==82674==  Access not within mapped region at address 0x0
-==82674==    at 0x401481: new_tile (game.c:31)
-==82674==    by 0x401FCB: init_game_windows (inits.c:16)
-==82674==    by 0x40220B: init_all_windows (inits.c:58)
-==82674==    by 0x402419: init_data (inits.c:89)
-==82674==    by 0x402547: main (main.c:48)
-==82674==  If you believe this happened as a result of a stack
-==82674==  overflow in your program's main thread (unlikely but
-==82674==  possible), you can try to increase the size of the
-==82674==  main thread stack using the --main-stacksize= flag.
-==82674==  The main thread stack size used in this run was 8388608.
-==82674== 
-==82674== HEAP SUMMARY:
-==82674==     in use at exit: 110,632 bytes in 431 blocks
-==82674==   total heap usage: 444 allocs, 13 frees, 120,408 bytes allocated
-==82674== 
-==82674== LEAK SUMMARY:
-==82674==    definitely lost: 0 bytes in 0 blocks
-==82674==    indirectly lost: 0 bytes in 0 blocks
-==82674==      possibly lost: 201 bytes in 3 blocks
-==82674==    still reachable: 110,431 bytes in 428 blocks
-==82674==         suppressed: 0 bytes in 0 blocks
-==82674== Rerun with --leak-check=full to see details of leaked memory
-==82674== 
-==82674== Use --track-origins=yes to see where uninitialised values come from
-==82674== For lists of detected and suppressed errors, rerun with: -s
-==82674== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==265299== Memcheck, a memory error detector
+==265299== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==265299== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==265299== Command: ./2048
+==265299== Parent PID: 150898
+==265299== 
+==265299== 
+==265299== HEAP SUMMARY:
+==265299==     in use at exit: 100,213 bytes in 451 blocks
+==265299==   total heap usage: 1,269 allocs, 818 frees, 161,857 bytes allocated
+==265299== 
+==265299== LEAK SUMMARY:
+==265299==    definitely lost: 0 bytes in 0 blocks
+==265299==    indirectly lost: 0 bytes in 0 blocks
+==265299==      possibly lost: 0 bytes in 0 blocks
+==265299==    still reachable: 0 bytes in 0 blocks
+==265299==         suppressed: 100,213 bytes in 451 blocks
+==265299== 
+==265299== For lists of detected and suppressed errors, rerun with: -s
+==265299== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 15 from 15)
